@@ -1,6 +1,6 @@
-gspread
-oauth2client
-pandas
-numpy
-faker
-argparse
+pandas==1.5.3
+numpy==1.23.5
+matplotlib==3.6.2
+seaborn==0.12.1
+gspread==5.7.0
+oauth2client==4.1.3

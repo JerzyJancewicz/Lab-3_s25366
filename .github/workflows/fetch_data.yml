@@ -1,45 +1,45 @@
-# name: Prepare and Analyze data
+name: Prepare and Analyze data
 
-# on:
-#   push:
-#     branches:
-#       - main
-#   workflow_dispatch:
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
 
-# jobs:
-#   fetch_data:
-#     runs-on: ubuntu-latest
+jobs:
+  fetch_data:
+    runs-on: ubuntu-latest
 
-#     steps:
-#       - name: Checkout repository
-#         uses: actions/checkout@v3
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-#       - name: Set up Python
-#         uses: actions/setup-python@v4
-#         with:
-#           python-version: '3.x'
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
 
-#       - name: Install dependencies
-#         run: |
-#           python -m pip install --upgrade pip
-#           pip install -r requirements.txt
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
 
-#       - name: Run data fetching script
-#         env:
-#           GOOGLE_SHEETS_CREDENTIALS: ${{ secrets.GOOGLE_SHEETS_CREDENTIALS }}
-#         run: |
-#           python fetch_data.py
+      - name: Run data checking and repairing script
+        env:
+          GOOGLE_SHEETS_CREDENTIALS: ${{ secrets.GOOGLE_SHEETS_CREDENTIALS }}
+        run: |
+          python repair_data.py
 
-#       # - name: Commit report to repository
-#       #   run: |
-#       #     git config --local user.email "jancewiczjerzy@gmail.com"
-#       #     git config --local user.name "JerzyJancewicz"
-#       #     git add report.md log.txt
-#       #     git commit -m "Add data cleaning report" || echo "No changes to commit"
-#       #     git push
+    #   - name: Commit report to repository
+    #     run: |
+    #       git config --local user.email "jancewiczjerzy@gmail.com"
+    #       git config --local user.name "JerzyJancewicz"
+    #       git add report.md log.txt
+    #       git commit -m "Add data cleaning report" || echo "No changes to commit"
+    #       git push
 
-#       # - name: Check if the workflow was triggered by this commit
-#       #   if: github.event_name == 'push' && startsWith(github.event.head_commit.message, 'Add data cleaning report')
-#       #   run: |
-#       #     echo "Workflow triggered by report commit, skipping further steps."
-#       #     exit 0  # Exit the workflow early to avoid recursion
+    #   - name: Check if the workflow was triggered by this commit
+    #     if: github.event_name == 'push' && startsWith(github.event.head_commit.message, 'Add data cleaning report')
+    #     run: |
+    #       echo "Workflow triggered by report commit, skipping further steps."
+    #       exit 0  # Exit the workflow early to avoid recursion
