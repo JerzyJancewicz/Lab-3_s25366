@@ -9,6 +9,7 @@ from oauth2client.service_account import ServiceAccountCredentials
 import logging
 from sklearn.preprocessing import LabelEncoder
 
+# Set up logging
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s',
@@ -21,6 +22,11 @@ logging.basicConfig(
 # Visualize settings
 sns.set(style="whitegrid")
 plt.rcParams["figure.figsize"] = (10, 5)
+
+# Create output directory for saving images if not exists
+output_dir = 'output_images'
+if not os.path.exists(output_dir):
+    os.makedirs(output_dir)
 
 def fetch_data(sheet_id):
     logging.info("Fetching data from Google Sheets.")
@@ -61,36 +67,29 @@ def explore_data(df):
     logging.info(f"Missing data:\n{missing_data}")
     
     # Histogram of 'score'
-    score_histogram_file = "score_distribution.png"
     plt.figure()
     sns.histplot(df['score'], kde=True)
     plt.title("Distribution of 'score'")
     plt.xlabel("Score")
     plt.ylabel("Frequency")
-    plt.savefig(score_histogram_file)
-    logging.info(f"Saved histogram for 'score' to {score_histogram_file}.")
+    plt.savefig(f"{output_dir}/score_distribution.png")
+    logging.info("Saved histogram for 'score'.")
     
     # Correlation matrix
-    correlation_matrix_file = "correlation_matrix.png"
     plt.figure()
     sns.heatmap(df.corr(), annot=True, cmap="coolwarm", fmt=".2f")
     plt.title("Correlation Matrix")
-    plt.savefig(correlation_matrix_file)
-    logging.info(f"Saved correlation matrix heatmap to {correlation_matrix_file}.")
+    plt.savefig(f"{output_dir}/correlation_matrix.png")
+    logging.info("Saved correlation matrix heatmap.")
     
     # Distribution for categorical variables
-    categorical_plots = []
     for column in df.select_dtypes(include=['object']).columns:
-        plot_file = f"{column}_distribution.png"
         plt.figure()
         sns.countplot(x=column, data=df)
         plt.title(f"Distribution of '{column}'")
         plt.xticks(rotation=45)
-        plt.savefig(plot_file)
-        logging.info(f"Saved distribution plot for '{column}' to {plot_file}.")
-        categorical_plots.append(plot_file)
-
-    return score_histogram_file, correlation_matrix_file, categorical_plots
+        plt.savefig(f"{output_dir}/{column}_distribution.png")
+        logging.info(f"Saved distribution plot for '{column}'.")
 
 def clean_data(df, threshold=0.7):
     logging.info("Starting data cleaning process.")
@@ -133,7 +132,7 @@ def clean_data(df, threshold=0.7):
 
     return df_cleaned, changed_percentage, removed_percentage, missing_summary
 
-def generate_report(changed_percentage, removed_percentage, missing_summary, score_histogram_file, correlation_matrix_file, categorical_plots):
+def generate_report(changed_percentage, removed_percentage, missing_summary):
     report_content = f"""# Data Exploration and Cleaning Report
 
 ## Summary
@@ -145,15 +144,12 @@ def generate_report(changed_percentage, removed_percentage, missing_summary, sco
     for column, count in missing_summary.items():
         report_content += f"- **{column}**: {count} missing values replaced.\n"
 
-    report_content += "\n## Visualizations\n"
-    
-    # Embed the charts in the report
-    report_content += f"### Distribution of 'score'\n![Score Distribution](./{score_histogram_file})\n\n"
-    report_content += f"### Correlation Matrix\n![Correlation Matrix](./{correlation_matrix_file})\n\n"
-    
-    # For categorical plots
-    for plot in categorical_plots:
-        report_content += f"### Distribution of {plot.split('_')[0]}\n![{plot}](./{plot})\n\n"
+    # Add chart images to the report
+    report_content += "\n## Charts\n"
+    report_content += f"![Score Distribution](./{output_dir}/score_distribution.png)\n"
+    report_content += f"![Correlation Matrix](./{output_dir}/correlation_matrix.png)\n"
+    for column in missing_summary.keys():
+        report_content += f"![{column} Distribution](./{output_dir}/{column}_distribution.png)\n"
 
     with open('report.md', 'w') as f:
         f.write(report_content)
@@ -169,14 +165,13 @@ if __name__ == "__main__":
     # Encode categorical columns before exploring data and creating visualizations
     df = encode_categorical(df)
     
-    # Explore data and save charts
-    score_histogram_file, correlation_matrix_file, categorical_plots = explore_data(df)
+    explore_data(df)
     
     # Clean data
     df_cleaned, changed_percentage, removed_percentage, missing_summary = clean_data(df)
     df_cleaned.to_csv('cleaned_data.csv', index=False)
     logging.info("Cleaned data saved to cleaned_data.csv.")
 
-    # Generate report with visualizations
-    generate_report(changed_percentage, removed_percentage, missing_summary, score_histogram_file, correlation_matrix_file, categorical_plots)
+    # Generate report
+    generate_report(changed_percentage, removed_percentage, missing_summary)
     logging.info("Script finished.")
