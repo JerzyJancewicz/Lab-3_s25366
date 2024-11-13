@@ -36,7 +36,7 @@ jobs:
           git config --local user.name "JerzyJancewicz"
           git add report.md log.txt
           git commit -m "Add data cleaning report" || echo "No changes to commit"
-          git push
+          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
 
       - name: Check if the workflow was triggered by this commit
         if: github.event_name == 'push' && startsWith(github.event.head_commit.message, 'Add data cleaning report')
