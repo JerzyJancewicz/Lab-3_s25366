@@ -10,6 +10,9 @@ jobs:
   fetch_data:
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: write  # Allow push to the repository
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
