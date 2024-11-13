@@ -9,7 +9,6 @@ from oauth2client.service_account import ServiceAccountCredentials
 import logging
 from sklearn.preprocessing import LabelEncoder
 
-# Set up logging
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s',
@@ -45,7 +44,6 @@ def encode_categorical(df):
     logging.info("Encoding categorical columns.")
     label_encoder = LabelEncoder()
 
-    # List of categorical columns to encode
     categorical_columns = ["gender", "ethnicity", "fcollege", "mcollege", "home", "urban", "income", "region"]
     
     # Apply label encoding to each categorical column
@@ -132,24 +130,47 @@ def clean_data(df, threshold=0.7):
 
     return df_cleaned, changed_percentage, removed_percentage, missing_summary
 
-def generate_report(changed_percentage, removed_percentage, missing_summary):
+def generate_report(changed_percentage, removed_percentage, missing_summary, df, output_dir="output_images"):
     report_content = f"""# Data Exploration and Cleaning Report
 
-## Summary
+## 1. Adjusting Data Summary
 - **Percentage of changed data**: {changed_percentage:.2f}%
 - **Percentage of removed data**: {removed_percentage:.2f}%
 
-## Missing Values Summary
+## 2. Data Overview
+
+### 2.1 Data Info
+The dataset consists of the following columns:
+
+{df.info()}
+
+### 2.2 Data Description
+Here is a summary of the dataset's statistics, including the count, mean, standard deviation, min, max, and other metrics for numerical columns, as well as the count of unique values for categorical columns:
+
+{df.describe(include='all')}
+
+### 2.3 Missing Values Summary
+The following columns had missing data which was replaced during the cleaning process:
+
 """
     for column, count in missing_summary.items():
         report_content += f"- **{column}**: {count} missing values replaced.\n"
 
-    # Add chart images to the report
-    report_content += "\n## Charts\n"
-    report_content += f"![Score Distribution](./{output_dir}/score_distribution.png)\n"
-    report_content += f"![Correlation Matrix](./{output_dir}/correlation_matrix.png)\n"
-    for column in missing_summary.keys():
-        report_content += f"![{column} Distribution](./{output_dir}/{column}_distribution.png)\n"
+    report_content += """
+## 3. Visualizations
+Here are some key visualizations for data analysis:
+
+### 3.1 Distribution of Scores
+![Distribution of Scores](output_images/score_distribution.png)
+
+### 3.2 Correlation Matrix
+![Correlation Matrix](output_images/correlation_matrix.png)
+
+"""
+    # Add distribution charts for categorical variables
+    for column in df.select_dtypes(include=['object']).columns:
+        report_content += f"### 3.3 Distribution of '{column}'\n"
+        report_content += f"![{column} Distribution](output_images/{column}_distribution.png)\n"
 
     with open('report.md', 'w') as f:
         f.write(report_content)
@@ -159,10 +180,8 @@ if __name__ == "__main__":
     logging.info("Script started.")
     sheet_id = '1YkU1WJJHMv-uclbaEes4Bns2N8NM89YX-injwRmJcOQ'
     
-    # Load and explore data
     df = fetch_data(sheet_id)
     
-    # Encode categorical columns before exploring data and creating visualizations
     df = encode_categorical(df)
     
     explore_data(df)
@@ -172,6 +191,5 @@ if __name__ == "__main__":
     df_cleaned.to_csv('cleaned_data.csv', index=False)
     logging.info("Cleaned data saved to cleaned_data.csv.")
 
-    # Generate report
     generate_report(changed_percentage, removed_percentage, missing_summary)
     logging.info("Script finished.")
