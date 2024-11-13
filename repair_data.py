@@ -7,6 +7,7 @@ import seaborn as sns
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 import logging
+from sklearn.preprocessing import LabelEncoder
 
 logging.basicConfig(
     level=logging.INFO,
@@ -17,7 +18,7 @@ logging.basicConfig(
     ]
 )
 
-# visualize settings
+# Visualize settings
 sns.set(style="whitegrid")
 plt.rcParams["figure.figsize"] = (10, 5)
 
@@ -34,6 +35,19 @@ def fetch_data(sheet_id):
     logging.info("Data fetched successfully.")
     return pd.DataFrame(data)
 
+def encode_categorical(df):
+    logging.info("Encoding categorical columns.")
+    label_encoder = LabelEncoder()
+
+    # List of categorical columns to encode
+    categorical_columns = ["gender", "ethnicity", "fcollege", "mcollege", "home", "urban", "income", "region"]
+    
+    # Apply label encoding to each categorical column
+    for col in categorical_columns:
+        df[col] = label_encoder.fit_transform(df[col])
+
+    return df
+
 def explore_data(df):
     logging.info("Exploring data.")
     
@@ -46,7 +60,7 @@ def explore_data(df):
     missing_data = df.isnull().sum()
     logging.info(f"Missing data:\n{missing_data}")
     
-    # Histogram zmiennej 'score'
+    # Histogram of 'score'
     plt.figure()
     sns.histplot(df['score'], kde=True)
     plt.title("Distribution of 'score'")
@@ -55,14 +69,14 @@ def explore_data(df):
     plt.savefig("score_distribution.png")
     logging.info("Saved histogram for 'score'.")
     
-    # Macierz korelacji
+    # Correlation matrix
     plt.figure()
     sns.heatmap(df.corr(), annot=True, cmap="coolwarm", fmt=".2f")
     plt.title("Correlation Matrix")
     plt.savefig("correlation_matrix.png")
     logging.info("Saved correlation matrix heatmap.")
     
-    # Rozkład dla zmiennych kategorycznych
+    # Distribution for categorical variables
     for column in df.select_dtypes(include=['object']).columns:
         plt.figure()
         sns.countplot(x=column, data=df)
@@ -77,12 +91,12 @@ def clean_data(df, threshold=0.7):
     changed_cells = 0
     missing_summary = {}
 
-    # Usunięcie wierszy z brakującymi wartościami (zachowanie 70% danych)
+    # Drop rows with missing values (keeping 70% of data)
     df_cleaned = df.dropna(thresh=int(threshold * len(df.columns)))  
     removed_rows = original_size - df_cleaned.shape[0]
     logging.info(f"Removed {removed_rows} rows during cleaning.")
 
-    # Wypełnianie braków medianą dla liczbowych i najczęściej występującą wartością dla kategorycznych
+    # Fill missing numeric values with the mean, and categorical with the mode
     for column in df_cleaned.select_dtypes(include=[np.number]).columns:
         num_missing = df_cleaned[column].isnull().sum()
         if num_missing > 0:
@@ -101,12 +115,12 @@ def clean_data(df, threshold=0.7):
             missing_summary[column] = num_missing
             logging.info(f"Filled {num_missing} missing values in '{column}' with mode '{mode_value}'.")
 
-    # Obliczenie zmienionych danych w procentach
+    # Calculate the changed and removed data percentages
     changed_percentage = (changed_cells / df.size) * 100 if df.size > 0 else 0
     removed_percentage = (removed_rows / original_size) * 100 if original_size > 0 else 0
 
     logging.info(f"Data cleaning process completed. Changed data percentage: {changed_percentage:.2f}%, Removed data percentage: {removed_percentage:.2f}%.")
-
+    
     for column, count in missing_summary.items():
         logging.info(f"Total missing values replaced in '{column}': {count}")
 
@@ -132,15 +146,19 @@ if __name__ == "__main__":
     logging.info("Script started.")
     sheet_id = '1YkU1WJJHMv-uclbaEes4Bns2N8NM89YX-injwRmJcOQ'
     
-    # Wczytywanie i eksploracja danych
+    # Load and explore data
     df = fetch_data(sheet_id)
+    
+    # Encode categorical columns before exploring data and creating visualizations
+    df = encode_categorical(df)
+    
     explore_data(df)
     
-    # Czyszczenie danych
+    # Clean data
     df_cleaned, changed_percentage, removed_percentage, missing_summary = clean_data(df)
     df_cleaned.to_csv('cleaned_data.csv', index=False)
     logging.info("Cleaned data saved to cleaned_data.csv.")
 
-    # Generowanie raportu
+    # Generate report
     generate_report(changed_percentage, removed_percentage, missing_summary)
     logging.info("Script finished.")
