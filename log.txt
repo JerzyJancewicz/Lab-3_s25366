@@ -88,3 +88,47 @@ dtype: int64
 2024-11-13 23:40:24,587 - INFO - Cleaned data saved to cleaned_data.csv.
 2024-11-13 23:40:24,588 - INFO - Report generated and saved to report.md.
 2024-11-13 23:40:24,588 - INFO - Script finished.
+2024-11-13 23:48:50,003 - INFO - Script started.
+2024-11-13 23:48:50,003 - INFO - Fetching data from Google Sheets.
+2024-11-13 23:48:51,004 - INFO - Data fetched successfully.
+2024-11-13 23:48:51,013 - INFO - Encoding categorical columns.
+2024-11-13 23:48:51,021 - INFO - Exploring data.
+2024-11-13 23:48:51,025 - INFO - Data info:
+None
+2024-11-13 23:48:51,051 - INFO - Data description:
+           rownames       gender  ...       income       region
+count   4739.000000  4739.000000  ...  4739.000000  4739.000000
+mean    3954.638953     0.451361  ...     0.711965     0.198987
+std     5953.827761     0.497681  ...     0.452895     0.399280
+min        1.000000     0.000000  ...     0.000000     0.000000
+25%     1185.500000     0.000000  ...     0.000000     0.000000
+50%     2370.000000     0.000000  ...     1.000000     0.000000
+75%     3554.500000     1.000000  ...     1.000000     0.000000
+max    37810.000000     1.000000  ...     1.000000     1.000000
+
+[8 rows x 15 columns]
+2024-11-13 23:48:51,052 - INFO - Missing data:
+rownames     0
+gender       0
+ethnicity    0
+score        0
+fcollege     0
+mcollege     0
+home         0
+urban        0
+unemp        0
+wage         0
+distance     0
+tuition      0
+education    0
+income       0
+region       0
+dtype: int64
+2024-11-13 23:48:51,235 - INFO - Saved histogram for 'score'.
+2024-11-13 23:48:51,707 - INFO - Saved correlation matrix heatmap.
+2024-11-13 23:48:51,707 - INFO - Starting data cleaning process.
+2024-11-13 23:48:51,709 - INFO - Removed 0 rows during cleaning.
+2024-11-13 23:48:51,711 - INFO - Data cleaning process completed. Changed data percentage: 0.00%, Removed data percentage: 0.00%.
+2024-11-13 23:48:51,746 - INFO - Cleaned data saved to cleaned_data.csv.
+2024-11-13 23:48:51,746 - INFO - Report generated and saved to report.md.
+2024-11-13 23:48:51,746 - INFO - Script finished.

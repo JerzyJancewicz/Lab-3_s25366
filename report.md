@@ -6,10 +6,6 @@
 
 ## Missing Values Summary
 
-## Visualizations
-### Distribution of 'score'
-![Score Distribution](./score_distribution.png)
-
-### Correlation Matrix
-![Correlation Matrix](./correlation_matrix.png)
-
+## Charts
+![Score Distribution](./output_images/score_distribution.png)
+![Correlation Matrix](./output_images/correlation_matrix.png)
