@@ -191,5 +191,5 @@ if __name__ == "__main__":
     df_cleaned.to_csv('cleaned_data.csv', index=False)
     logging.info("Cleaned data saved to cleaned_data.csv.")
 
-    generate_report(changed_percentage, removed_percentage, missing_summary)
+    generate_report(changed_percentage, removed_percentage, missing_summary, df)
     logging.info("Script finished.")
