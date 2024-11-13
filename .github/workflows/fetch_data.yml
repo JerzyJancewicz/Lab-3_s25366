@@ -30,16 +30,16 @@ jobs:
         run: |
           python repair_data.py
 
-    #   - name: Commit report to repository
-    #     run: |
-    #       git config --local user.email "jancewiczjerzy@gmail.com"
-    #       git config --local user.name "JerzyJancewicz"
-    #       git add report.md log.txt
-    #       git commit -m "Add data cleaning report" || echo "No changes to commit"
-    #       git push
+      - name: Commit report to repository
+        run: |
+          git config --local user.email "jancewiczjerzy@gmail.com"
+          git config --local user.name "JerzyJancewicz"
+          git add report.md log.txt
+          git commit -m "Add data cleaning report" || echo "No changes to commit"
+          git push
 
-    #   - name: Check if the workflow was triggered by this commit
-    #     if: github.event_name == 'push' && startsWith(github.event.head_commit.message, 'Add data cleaning report')
-    #     run: |
-    #       echo "Workflow triggered by report commit, skipping further steps."
-    #       exit 0  # Exit the workflow early to avoid recursion
+      - name: Check if the workflow was triggered by this commit
+        if: github.event_name == 'push' && startsWith(github.event.head_commit.message, 'Add data cleaning report')
+        run: |
+          echo "Workflow triggered by report commit, skipping further steps."
+          exit 0  # Exit the workflow early to avoid recursion
