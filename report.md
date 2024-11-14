@@ -54,16 +54,20 @@ The following columns had missing data, which was replaced during the cleaning p
 
 ### 3.1 Model Selection
 We selected **Logistic Regression** due to:
-- Its interpretability and efficiency for binary classification.
+- Its interpretability and efficiency for binary classification tasks.
 - Ability to provide probability estimates, which are useful for classification tasks.
 
 ### 3.2 Model Training Results
-- **Training Accuracy**: 0.86%
-- **Test Accuracy**: 0.86%
+- **Training Accuracy**: 86.23054603007122%
+- **Test Accuracy**: 85.86497890295358%
 
 ### 3.3 Model Evaluation Report
-The following classification report shows precision, recall, F1-score, and support metrics for each class:
-              precision    recall  f1-score   support
+The model evaluation is summarized below:
+- **Training Accuracy** is calculated based on the training data predictions.
+- **Test Accuracy** is calculated based on the test data predictions.
+- The **Classification Report** provides precision, recall, F1-score, and support metrics for each class. It helps assess the model's performance across different categories.
+
+                  precision    recall  f1-score   support
 
            0       0.88      0.82      0.85       452
            1       0.84      0.90      0.87       496
@@ -71,6 +75,7 @@ The following classification report shows precision, recall, F1-score, and suppo
     accuracy                           0.86       948
    macro avg       0.86      0.86      0.86       948
 weighted avg       0.86      0.86      0.86       948
+
 
 
 ## 4. Visualizations
