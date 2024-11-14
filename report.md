@@ -57,11 +57,17 @@ We selected **Logistic Regression** due to:
 - Its interpretability and efficiency for binary classification tasks.
 - Ability to provide probability estimates, which are useful for classification tasks.
 
-### 3.2 Model Training Results
+### 3.2 Data Split Summary
+The data was split into training and test sets is 20% for the test set.
+The data was split into:
+- **Training set size**: 3791
+- **Test set size**: 948
+
+### 3.3 Model Training Results
 - **Training Accuracy**: 86.23054603007122%
 - **Test Accuracy**: 85.86497890295358%
 
-### 3.3 Model Evaluation Report
+### 3.4 Model Evaluation Report
 The model evaluation is summarized below:
 - **Training Accuracy** is calculated based on the training data predictions.
 - **Test Accuracy** is calculated based on the test data predictions.
