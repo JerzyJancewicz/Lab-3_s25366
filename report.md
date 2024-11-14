@@ -1,16 +1,15 @@
+# Data Exploration and Cleaning Report
 
-        # Data Exploration and Cleaning Report
+    ## 1. Adjusting Data Summary
+    - **Percentage of changed data**: 0.00%
+    - **Percentage of removed data**: 0.00%
 
-        ## 1. Adjusting Data Summary
-        - **Percentage of changed data**: 0.00%
-        - **Percentage of removed data**: 0.00%
+    ## 2. Data Overview
 
-        ## 2. Data Overview
+    ### 2.1 Data Info
+    The dataset consists of the following columns (with their data types):
 
-        ### 2.1 Data Info
-        The dataset consists of the following columns (with their data types):
-
-        - **rownames**: int64
+    - **rownames**: int64
 - **gender**: int64
 - **ethnicity**: int64
 - **score**: float64
@@ -26,8 +25,7 @@
 - **income**: int64
 - **region**: int64
 
-
-        ### 2.2 Data Description
+### 2.2 Data Description
         Here is a summary of the dataset's statistics for numerical columns:
 
         | Column    | Count  | Mean      | Std Dev   | Min   | 25%    | 50%    | 75%    | Max   |
@@ -48,18 +46,39 @@
 | income | 4739.0 | 0.71 | 0.45 | 0.00 | 0.00 | 1.00 | 1.00 | 1.00 |
 | region | 4739.0 | 0.20 | 0.40 | 0.00 | 0.00 | 0.00 | 0.00 | 1.00 |
 
-
-        ### 2.3 Missing Values Summary
+### 2.3 Missing Values Summary
         The following columns had missing data, which was replaced during the cleaning process:
 
         
-        ## 3. Visualizations
-        Here are some key visualizations for data analysis:
+## 3. Model Training and Evaluation
 
-        ### 3.1 Distribution of Scores
-        ![Distribution of Scores](output_images/score_distribution.png)
+    ### 3.1 Model Selection
+    We selected **Logistic Regression** due to:
+    - Its interpretability and efficiency for binary classification.
+    - Ability to provide probability estimates, which are useful for classification tasks.
 
-        ### 3.2 Correlation Matrix
-        ![Correlation Matrix](output_images/correlation_matrix.png)
+    ### 3.2 Model Training Results
+    - **Training Accuracy**: 0.86%
+    - **Test Accuracy**: 0.86%
 
-        
+    ### 3.3 Model Evaluation Report
+    The following classification report shows precision, recall, F1-score, and support metrics for each class:
+                  precision    recall  f1-score   support
+
+           0       0.88      0.82      0.85       452
+           1       0.84      0.90      0.87       496
+
+    accuracy                           0.86       948
+   macro avg       0.86      0.86      0.86       948
+weighted avg       0.86      0.86      0.86       948
+
+
+    ## 4. Visualizations
+    Here are some key visualizations for data analysis:
+
+    ### 4.1 Distribution of Scores
+    ![Distribution of Scores](output_images/score_distribution.png)
+
+    ### 4.2 Correlation Matrix
+    ![Correlation Matrix](output_images/correlation_matrix.png)
+    
