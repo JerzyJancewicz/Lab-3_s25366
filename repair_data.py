@@ -176,7 +176,7 @@ def train_model(df, target_column, test_size=0.2, random_state=42):
     X_train, X_test, y_train, y_test = split_data(df, target_column, test_size, random_state)
     
     # Choosing Logistic Regression for this example
-    model = LinearRegression(random_state=random_state)
+    model = LinearRegression()
     logging.info("Selected Logistic Regression model for binary classification.")
 
     # Train the model
