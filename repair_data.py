@@ -296,6 +296,7 @@ if __name__ == "__main__":
 
     # Changed score to be categorical
     df_cleaned['score_category'] = pd.cut(df_cleaned['score'], bins=[0, 50, 75, 100], labels=["Low", "Medium", "High"])
+    df_cleaned['score_category'] = df_cleaned['score_category'].map({"Low": 0, "Medium": 1, "High": 2})
     df_cleaned.to_csv('cleaned_data.csv', index=False)
     logging.info("Cleaned data saved to cleaned_data.csv.")
     
