@@ -10,7 +10,7 @@ import logging
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, classification_report
-from sklearn.linear_model import LogisticRegression
+from sklearn.linear_model import LinearRegression
 
 logging.basicConfig(
     level=logging.INFO,
@@ -176,7 +176,7 @@ def train_model(df, target_column, test_size=0.2, random_state=42):
     X_train, X_test, y_train, y_test = split_data(df, target_column, test_size, random_state)
     
     # Choosing Logistic Regression for this example
-    model = LogisticRegression(random_state=random_state)
+    model = LinearRegression(random_state=random_state)
     logging.info("Selected Logistic Regression model for binary classification.")
 
     # Train the model
@@ -293,11 +293,14 @@ if __name__ == "__main__":
     df = encode_categorical(df)
     explore_data(df)
     df_cleaned, changed_percentage, removed_percentage, missing_summary = clean_data(df)
+
+    # Changed score to be categorical
+    df_cleaned['score_category'] = pd.cut(df_cleaned['score'], bins=[0, 50, 75, 100], labels=["Low", "Medium", "High"])
     df_cleaned.to_csv('cleaned_data.csv', index=False)
     logging.info("Cleaned data saved to cleaned_data.csv.")
     
     # Model training and evaluation
-    model, train_acc, test_acc, eval_report = train_model(df_cleaned, target_column="score")
+    model, train_acc, test_acc, eval_report = train_model(df_cleaned, target_column="score_category")
 
     # Model information for report
     model_info = {
