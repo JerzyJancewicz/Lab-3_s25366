@@ -10,7 +10,7 @@ import logging
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, classification_report
-from sklearn.linear_model import LinearRegression
+from sklearn.linear_model import LogisticRegression
 
 logging.basicConfig(
     level=logging.INFO,
@@ -175,8 +175,8 @@ def train_model(df, target_column, test_size=0.2, random_state=42):
     # Split data into training and test sets
     X_train, X_test, y_train, y_test = split_data(df, target_column, test_size, random_state)
     
-    # Choosing Logistic Regression for this example
-    model = LinearRegression()
+    # Choosing Logistic Regression
+    model = LogisticRegression(multi_class='multinomial', solver='lbfgs')
     logging.info("Selected Logistic Regression model for binary classification.")
 
     # Train the model
