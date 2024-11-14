@@ -275,7 +275,7 @@ def generate_report(changed_percentage, removed_percentage, missing_summary, df,
     """
     # Save the report to a Markdown file
     for column in df.select_dtypes(include=['object']).columns:
-        report_content += f"### 3.3 Distribution of '{column}'\n"
+        report_content += f"### Distribution of '{column}'\n"
         report_content += f"![{column} Distribution](output_images/{column}_distribution.png)\n"
 
     # Save the report to a Markdown file
@@ -297,7 +297,7 @@ if __name__ == "__main__":
     logging.info("Cleaned data saved to cleaned_data.csv.")
     
     # Model training and evaluation
-    model, train_acc, test_acc, eval_report = train_model(df_cleaned, target_column="target_column")
+    model, train_acc, test_acc, eval_report = train_model(df_cleaned, target_column="score")
 
     # Model information for report
     model_info = {
