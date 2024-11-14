@@ -208,72 +208,71 @@ def generate_report(changed_percentage, removed_percentage, missing_summary, df,
         model_info (dict): Dictionary with model name, training and test accuracy, and evaluation report.
         output_dir (str): Directory path for image output files.
     """
-    # Start building the report content
     report_content = f"""# Data Exploration and Cleaning Report
 
-    ## 1. Adjusting Data Summary
-    - **Percentage of changed data**: {changed_percentage:.2f}%
-    - **Percentage of removed data**: {removed_percentage:.2f}%
+## 1. Adjusting Data Summary
+- **Percentage of changed data**: {changed_percentage:.2f}%
+- **Percentage of removed data**: {removed_percentage:.2f}%
 
-    ## 2. Data Overview
+## 2. Data Overview
 
-    ### 2.1 Data Info
-    The dataset consists of the following columns (with their data types):
+### 2.1 Data Info
+The dataset consists of the following columns with their data types:
 
-    """
-
-    # Get a summary of the columns and their data types (formatted nicely)
+"""
+    # Add columns info in a bullet-point format
     columns_info = "\n".join([f"- **{col}**: {dtype}" for col, dtype in df.dtypes.items()])
     report_content += columns_info + "\n\n"
 
     # 2.2 Data Description
     report_content += """### 2.2 Data Description
-        Here is a summary of the dataset's statistics for numerical columns:
+Here is a summary of the dataset's statistics for numerical columns:
 
-        | Column    | Count  | Mean      | Std Dev   | Min   | 25%    | 50%    | 75%    | Max   |
-        |-----------|--------|-----------|-----------|-------|--------|--------|--------|-------|
-        """
+| Column    | Count  | Mean      | Std Dev   | Min   | 25%    | 50%    | 75%    | Max   |
+|-----------|--------|-----------|-----------|-------|--------|--------|--------|-------|
+"""
     # Add the data summary as a table
-    numeric_desc = df.describe().T  # Transpose for better readability
+    numeric_desc = df.describe().T  # Transpose for readability
     for index, row in numeric_desc.iterrows():
-        report_content += f"| {index} | {row['count']} | {row['mean']:.2f} | {row['std']:.2f} | {row['min']:.2f} | {row['25%']:.2f} | {row['50%']:.2f} | {row['75%']:.2f} | {row['max']:.2f} |\n"
+        report_content += f"| {index} | {row['count']:.0f} | {row['mean']:.2f} | {row['std']:.2f} | {row['min']:.2f} | {row['25%']:.2f} | {row['50%']:.2f} | {row['75%']:.2f} | {row['max']:.2f} |\n"
     
     report_content += "\n"
 
     # 2.3 Missing Values Summary
     report_content += """### 2.3 Missing Values Summary
-        The following columns had missing data, which was replaced during the cleaning process:
+The following columns had missing data, which was replaced during the cleaning process:
 
-        """
+"""
     for column, count in missing_summary.items():
         report_content += f"- **{column}**: {count} missing values replaced.\n"
 
-    # Model Training Summary (added at the end, preserving sequence)
+    # Model Training Summary
     report_content += f"""\n## 3. Model Training and Evaluation
 
-    ### 3.1 Model Selection
-    We selected **{model_info["model_name"]}** due to:
-    - Its interpretability and efficiency for binary classification.
-    - Ability to provide probability estimates, which are useful for classification tasks.
+### 3.1 Model Selection
+We selected **{model_info["model_name"]}** due to:
+- Its interpretability and efficiency for binary classification.
+- Ability to provide probability estimates, which are useful for classification tasks.
 
-    ### 3.2 Model Training Results
-    - **Training Accuracy**: {model_info["train_accuracy"]:.2f}%
-    - **Test Accuracy**: {model_info["test_accuracy"]:.2f}%
+### 3.2 Model Training Results
+- **Training Accuracy**: {model_info["train_accuracy"]:.2f}%
+- **Test Accuracy**: {model_info["test_accuracy"]:.2f}%
 
-    ### 3.3 Model Evaluation Report
-    The following classification report shows precision, recall, F1-score, and support metrics for each class:
-    {model_info["evaluation_report"]}
+### 3.3 Model Evaluation Report
+The following classification report shows precision, recall, F1-score, and support metrics for each class:
+{model_info["evaluation_report"]}
 
-    ## 4. Visualizations
-    Here are some key visualizations for data analysis:
+## 4. Visualizations
+Here are some key visualizations for data analysis:
 
-    ### 4.1 Distribution of Scores
-    ![Distribution of Scores](output_images/score_distribution.png)
+### 4.1 Distribution of Scores
+![Distribution of Scores](output_images/score_distribution.png)
 
-    ### 4.2 Correlation Matrix
-    ![Correlation Matrix](output_images/correlation_matrix.png)
-    """
-    # Save the report to a Markdown file
+### 4.2 Correlation Matrix
+![Correlation Matrix](output_images/correlation_matrix.png)
+
+"""
+    # Additional categorical distributions if they exist in the output directory
     for column in df.select_dtypes(include=['object']).columns:
         report_content += f"### Distribution of '{column}'\n"
         report_content += f"![{column} Distribution](output_images/{column}_distribution.png)\n"
