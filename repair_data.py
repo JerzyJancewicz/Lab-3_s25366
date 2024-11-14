@@ -11,6 +11,7 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, classification_report
 from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import mean_squared_error, r2_score
 
 logging.basicConfig(
     level=logging.INFO,
@@ -168,14 +169,13 @@ def train_model(df, target_column, test_size=0.2, random_state=42):
         model (object): Trained model object.
         train_accuracy (float): Accuracy score on training data.
         test_accuracy (float): Accuracy score on test data.
-        report (str): Detailed classification report on test data.
+        eval_report (str): Detailed classification report on test data.
     """
     logging.info("Splitting data into training and test sets for model training.")
     
     # Split data into training and test sets
     X_train, X_test, y_train, y_test = split_data(df, target_column, test_size, random_state)
     
-    # Choosing Logistic Regression
     model = LogisticRegression(multi_class='multinomial', solver='lbfgs')
     logging.info("Selected Logistic Regression model for binary classification.")
 
@@ -186,12 +186,14 @@ def train_model(df, target_column, test_size=0.2, random_state=42):
     # Evaluate the model
     train_accuracy = accuracy_score(y_train, model.predict(X_train))
     test_accuracy = accuracy_score(y_test, model.predict(X_test))
-    logging.info(f"Training accuracy: {train_accuracy:.2f}")
-    logging.info(f"Test accuracy: {test_accuracy:.2f}")
-
-    # Detailed classification report
+    
+    # Generate classification report
     eval_report = classification_report(y_test, model.predict(X_test))
     logging.info("Generated classification report for test set.")
+
+    # Log the evaluation results
+    logging.info(f"Training accuracy: {train_accuracy:.2f}")
+    logging.info(f"Test accuracy: {test_accuracy:.2f}")
 
     return model, train_accuracy, test_accuracy, eval_report
 
@@ -246,21 +248,26 @@ The following columns had missing data, which was replaced during the cleaning p
     for column, count in missing_summary.items():
         report_content += f"- **{column}**: {count} missing values replaced.\n"
 
-    # Model Training Summary
+    # Model Evaluation Summary
     report_content += f"""\n## 3. Model Training and Evaluation
 
 ### 3.1 Model Selection
 We selected **{model_info["model_name"]}** due to:
-- Its interpretability and efficiency for binary classification.
+- Its interpretability and efficiency for binary classification tasks.
 - Ability to provide probability estimates, which are useful for classification tasks.
 
 ### 3.2 Model Training Results
-- **Training Accuracy**: {model_info["train_accuracy"]:.2f}%
-- **Test Accuracy**: {model_info["test_accuracy"]:.2f}%
+- **Training Accuracy**: {model_info["train_accuracy"]}%
+- **Test Accuracy**: {model_info["test_accuracy"]}%
 
 ### 3.3 Model Evaluation Report
-The following classification report shows precision, recall, F1-score, and support metrics for each class:
-{model_info["evaluation_report"]}
+The model evaluation is summarized below:
+- **Training Accuracy** is calculated based on the training data predictions.
+- **Test Accuracy** is calculated based on the test data predictions.
+- The **Classification Report** provides precision, recall, F1-score, and support metrics for each class. It helps assess the model's performance across different categories.
+
+    {model_info["eval_report"]}
+
 
 ## 4. Visualizations
 Here are some key visualizations for data analysis:
@@ -300,14 +307,14 @@ if __name__ == "__main__":
     logging.info("Cleaned data saved to cleaned_data.csv.")
     
     # Model training and evaluation
-    model, train_acc, test_acc, eval_report = train_model(df_cleaned, target_column="score_category")
+    model, train_accuracy, test_accuracy, eval_report = train_model(df_cleaned, target_column="score_category")
 
     # Model information for report
     model_info = {
         "model_name": "Logistic Regression",
-        "train_accuracy": train_acc,
-        "test_accuracy": test_acc,
-        "evaluation_report": eval_report
+        "train_accuracy": train_accuracy * 100,
+        "test_accuracy": test_accuracy * 100,
+        "eval_report": eval_report
     }
 
     # Generate report with model evaluation details
