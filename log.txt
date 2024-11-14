@@ -360,3 +360,55 @@ dtype: int64
 2024-11-14 20:11:37,468 - INFO - Generated classification report for test set.
 2024-11-14 20:11:37,484 - INFO - Report generated and saved to report.md.
 2024-11-14 20:11:37,485 - INFO - Script finished.
+2024-11-14 20:16:50,802 - INFO - Script started.
+2024-11-14 20:16:50,802 - INFO - Fetching data from Google Sheets.
+2024-11-14 20:16:52,278 - INFO - Data fetched successfully.
+2024-11-14 20:16:52,288 - INFO - Encoding categorical columns.
+2024-11-14 20:16:52,296 - INFO - Exploring data.
+2024-11-14 20:16:52,300 - INFO - Data info:
+None
+2024-11-14 20:16:52,326 - INFO - Data description:
+           rownames       gender  ...       income       region
+count   4739.000000  4739.000000  ...  4739.000000  4739.000000
+mean    3954.638953     0.451361  ...     0.711965     0.198987
+std     5953.827761     0.497681  ...     0.452895     0.399280
+min        1.000000     0.000000  ...     0.000000     0.000000
+25%     1185.500000     0.000000  ...     0.000000     0.000000
+50%     2370.000000     0.000000  ...     1.000000     0.000000
+75%     3554.500000     1.000000  ...     1.000000     0.000000
+max    37810.000000     1.000000  ...     1.000000     1.000000
+
+[8 rows x 15 columns]
+2024-11-14 20:16:52,327 - INFO - Missing data:
+rownames     0
+gender       0
+ethnicity    0
+score        0
+fcollege     0
+mcollege     0
+home         0
+urban        0
+unemp        0
+wage         0
+distance     0
+tuition      0
+education    0
+income       0
+region       0
+dtype: int64
+2024-11-14 20:16:52,510 - INFO - Saved histogram for 'score'.
+2024-11-14 20:16:52,947 - INFO - Saved correlation matrix heatmap.
+2024-11-14 20:16:52,947 - INFO - Starting data cleaning process.
+2024-11-14 20:16:52,949 - INFO - Removed 0 rows during cleaning.
+2024-11-14 20:16:52,951 - INFO - Data cleaning process completed. Changed data percentage: 0.00%, Removed data percentage: 0.00%.
+2024-11-14 20:16:52,988 - INFO - Cleaned data saved to cleaned_data.csv.
+2024-11-14 20:16:52,988 - INFO - Splitting data into training and test sets for model training.
+2024-11-14 20:16:52,988 - INFO - Splitting data into training and test sets
+2024-11-14 20:16:52,990 - INFO - Data split complete: Training set size = 3791, Test set size = 948
+2024-11-14 20:16:52,990 - INFO - Selected Logistic Regression model for binary classification.
+2024-11-14 20:16:53,049 - INFO - Model training completed.
+2024-11-14 20:16:53,052 - INFO - Training accuracy: 0.86
+2024-11-14 20:16:53,052 - INFO - Test accuracy: 0.86
+2024-11-14 20:16:53,058 - INFO - Generated classification report for test set.
+2024-11-14 20:16:53,075 - INFO - Report generated and saved to report.md.
+2024-11-14 20:16:53,075 - INFO - Script finished.
