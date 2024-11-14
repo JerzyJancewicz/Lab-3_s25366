@@ -152,13 +152,15 @@ The dataset consists of the following columns (with their data types):
     report_content += """### 2.2 Data Description
 Here is a summary of the dataset's statistics for numerical columns:
 
+| Column    | Count  | Mean      | Std Dev   | Min   | 25%    | 50%    | 75%    | Max   |
+|-----------|--------|-----------|-----------|-------|--------|--------|--------|-------|
 """
-    # Add a description of numeric columns
+    # Add the data summary as a table
     numeric_desc = df.describe().T  # Transpose for better readability
-    numeric_desc = numeric_desc[['count', 'mean', 'std', 'min', '25%', '50%', '75%', 'max']]
+    for index, row in numeric_desc.iterrows():
+        report_content += f"| {index} | {row['count']} | {row['mean']:.2f} | {row['std']:.2f} | {row['min']:.2f} | {row['25%']:.2f} | {row['50%']:.2f} | {row['75%']:.2f} | {row['max']:.2f} |\n"
     
-    # Format numeric description for better presentation
-    report_content += numeric_desc.to_string(index=True) + "\n\n"
+    report_content += "\n"
 
     # 2.3 Missing Values Summary
     report_content += """### 2.3 Missing Values Summary
@@ -188,6 +190,7 @@ Here are some key visualizations for data analysis:
     with open('report.md', 'w') as f:
         f.write(report_content)
     logging.info("Report generated and saved to report.md.")
+
 
 if __name__ == "__main__":
     logging.info("Script started.")
