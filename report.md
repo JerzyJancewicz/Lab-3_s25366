@@ -1,15 +1,16 @@
-# Data Exploration and Cleaning Report
 
-## 1. Adjusting Data Summary
-- **Percentage of changed data**: 0.00%
-- **Percentage of removed data**: 0.00%
+        # Data Exploration and Cleaning Report
 
-## 2. Data Overview
+        ## 1. Adjusting Data Summary
+        - **Percentage of changed data**: 0.00%
+        - **Percentage of removed data**: 0.00%
 
-### 2.1 Data Info
-The dataset consists of the following columns (with their data types):
+        ## 2. Data Overview
 
-- **rownames**: int64
+        ### 2.1 Data Info
+        The dataset consists of the following columns (with their data types):
+
+        - **rownames**: int64
 - **gender**: int64
 - **ethnicity**: int64
 - **score**: float64
@@ -25,12 +26,13 @@ The dataset consists of the following columns (with their data types):
 - **income**: int64
 - **region**: int64
 
-### 2.2 Data Description
-Here is a summary of the dataset's statistics for numerical columns:
 
-| Column    | Count  | Mean      | Std Dev   | Min   | 25%    | 50%    | 75%    | Max   |
-|-----------|--------|-----------|-----------|-------|--------|--------|--------|-------|
-| rownames | 4739.0 | 3954.64 | 5953.83 | 1.00 | 1185.50 | 2370.00 | 3554.50 | 37810.00 |
+        ### 2.2 Data Description
+        Here is a summary of the dataset's statistics for numerical columns:
+
+        | Column    | Count  | Mean      | Std Dev   | Min   | 25%    | 50%    | 75%    | Max   |
+        |-----------|--------|-----------|-----------|-------|--------|--------|--------|-------|
+        | rownames | 4739.0 | 3954.64 | 5953.83 | 1.00 | 1185.50 | 2370.00 | 3554.50 | 37810.00 |
 | gender | 4739.0 | 0.45 | 0.50 | 0.00 | 0.00 | 0.00 | 1.00 | 1.00 |
 | ethnicity | 4739.0 | 1.48 | 0.76 | 0.00 | 1.00 | 2.00 | 2.00 | 2.00 |
 | score | 4739.0 | 50.89 | 8.70 | 28.95 | 43.92 | 51.19 | 57.77 | 72.81 |
@@ -46,16 +48,18 @@ Here is a summary of the dataset's statistics for numerical columns:
 | income | 4739.0 | 0.71 | 0.45 | 0.00 | 0.00 | 1.00 | 1.00 | 1.00 |
 | region | 4739.0 | 0.20 | 0.40 | 0.00 | 0.00 | 0.00 | 0.00 | 1.00 |
 
-### 2.3 Missing Values Summary
-The following columns had missing data, which was replaced during the cleaning process:
 
+        ### 2.3 Missing Values Summary
+        The following columns had missing data, which was replaced during the cleaning process:
 
-## 3. Visualizations
-Here are some key visualizations for data analysis:
+        
+        ## 3. Visualizations
+        Here are some key visualizations for data analysis:
 
-### 3.1 Distribution of Scores
-![Distribution of Scores](output_images/score_distribution.png)
+        ### 3.1 Distribution of Scores
+        ![Distribution of Scores](output_images/score_distribution.png)
 
-### 3.2 Correlation Matrix
-![Correlation Matrix](output_images/correlation_matrix.png)
+        ### 3.2 Correlation Matrix
+        ![Correlation Matrix](output_images/correlation_matrix.png)
 
+        
