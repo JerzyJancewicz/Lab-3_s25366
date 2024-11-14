@@ -131,6 +131,7 @@ def clean_data(df, threshold=0.7):
     return df_cleaned, changed_percentage, removed_percentage, missing_summary
 
 def generate_report(changed_percentage, removed_percentage, missing_summary, df, output_dir="output_images"):
+    # Start building the report content
     report_content = f"""# Data Exploration and Cleaning Report
 
 ## 1. Adjusting Data Summary
@@ -140,17 +141,28 @@ def generate_report(changed_percentage, removed_percentage, missing_summary, df,
 ## 2. Data Overview
 
 ### 2.1 Data Info
-The dataset consists of the following columns:
+The dataset consists of the following columns (with their data types):
 
-{df.info()}
+"""
+    # Get a summary of the columns and their data types (formatted nicely)
+    columns_info = "\n".join([f"- **{col}**: {dtype}" for col, dtype in df.dtypes.items()])
+    report_content += columns_info + "\n\n"
 
-### 2.2 Data Description
-Here is a summary of the dataset's statistics, including the count, mean, standard deviation, min, max, and other metrics for numerical columns, as well as the count of unique values for categorical columns:
+    # 2.2 Data Description
+    report_content += """### 2.2 Data Description
+Here is a summary of the dataset's statistics for numerical columns:
 
-{df.describe(include='all')}
+"""
+    # Add a description of numeric columns
+    numeric_desc = df.describe().T  # Transpose for better readability
+    numeric_desc = numeric_desc[['count', 'mean', 'std', 'min', '25%', '50%', '75%', 'max']]
+    
+    # Format numeric description for better presentation
+    report_content += numeric_desc.to_string(index=True) + "\n\n"
 
-### 2.3 Missing Values Summary
-The following columns had missing data which was replaced during the cleaning process:
+    # 2.3 Missing Values Summary
+    report_content += """### 2.3 Missing Values Summary
+The following columns had missing data, which was replaced during the cleaning process:
 
 """
     for column, count in missing_summary.items():
@@ -172,6 +184,7 @@ Here are some key visualizations for data analysis:
         report_content += f"### 3.3 Distribution of '{column}'\n"
         report_content += f"![{column} Distribution](output_images/{column}_distribution.png)\n"
 
+    # Save the report to a Markdown file
     with open('report.md', 'w') as f:
         f.write(report_content)
     logging.info("Report generated and saved to report.md.")
