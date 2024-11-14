@@ -8,6 +8,7 @@ import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 import logging
 from sklearn.preprocessing import LabelEncoder
+from sklearn.model_selection import train_test_split
 
 logging.basicConfig(
     level=logging.INFO,
@@ -130,31 +131,66 @@ def clean_data(df, threshold=0.7):
 
     return df_cleaned, changed_percentage, removed_percentage, missing_summary
 
+# Function to split data into training and test sets
+def split_data(df, target_column, test_size=0.2, random_state=42):
+    """
+    Splits the data into training and test sets.
+    Parameters:
+        df (pd.DataFrame): The input DataFrame.
+        target_column (str): The column to be used as the target.
+        test_size (float): The proportion of the dataset to include in the test split.
+        random_state (int): Controls the shuffling applied to the data before the split.
+    Returns:
+        X_train, X_test, y_train, y_test: Split datasets for training and testing.
+    """
+    logging.info("Splitting data into training and test sets")
+    
+    X = df.drop(columns=target_column)
+    y = df[target_column]
+    
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=random_state)
+    logging.info(f"Data split complete: Training set size = {len(X_train)}, Test set size = {len(X_test)}")
+    
+    return X_train, X_test, y_train, y_test
+
+
+# Function to generate the data exploration and cleaning report
 def generate_report(changed_percentage, removed_percentage, missing_summary, df, output_dir="output_images"):
+    """
+    Generates a Markdown report summarizing data cleaning and exploratory analysis.
+    Parameters:
+        changed_percentage (float): Percentage of data that was modified.
+        removed_percentage (float): Percentage of data that was removed.
+        missing_summary (dict): Summary of missing data replacements by column.
+        df (pd.DataFrame): The input DataFrame.
+        output_dir (str): Directory path for image output files.
+    """
     # Start building the report content
-    report_content = f"""# Data Exploration and Cleaning Report
+    report_content = f"""
+        # Data Exploration and Cleaning Report
 
-## 1. Adjusting Data Summary
-- **Percentage of changed data**: {changed_percentage:.2f}%
-- **Percentage of removed data**: {removed_percentage:.2f}%
+        ## 1. Adjusting Data Summary
+        - **Percentage of changed data**: {changed_percentage:.2f}%
+        - **Percentage of removed data**: {removed_percentage:.2f}%
 
-## 2. Data Overview
+        ## 2. Data Overview
 
-### 2.1 Data Info
-The dataset consists of the following columns (with their data types):
+        ### 2.1 Data Info
+        The dataset consists of the following columns (with their data types):
 
-"""
+        """
     # Get a summary of the columns and their data types (formatted nicely)
     columns_info = "\n".join([f"- **{col}**: {dtype}" for col, dtype in df.dtypes.items()])
     report_content += columns_info + "\n\n"
 
     # 2.2 Data Description
-    report_content += """### 2.2 Data Description
-Here is a summary of the dataset's statistics for numerical columns:
+    report_content += """
+        ### 2.2 Data Description
+        Here is a summary of the dataset's statistics for numerical columns:
 
-| Column    | Count  | Mean      | Std Dev   | Min   | 25%    | 50%    | 75%    | Max   |
-|-----------|--------|-----------|-----------|-------|--------|--------|--------|-------|
-"""
+        | Column    | Count  | Mean      | Std Dev   | Min   | 25%    | 50%    | 75%    | Max   |
+        |-----------|--------|-----------|-----------|-------|--------|--------|--------|-------|
+        """
     # Add the data summary as a table
     numeric_desc = df.describe().T  # Transpose for better readability
     for index, row in numeric_desc.iterrows():
@@ -163,24 +199,25 @@ Here is a summary of the dataset's statistics for numerical columns:
     report_content += "\n"
 
     # 2.3 Missing Values Summary
-    report_content += """### 2.3 Missing Values Summary
-The following columns had missing data, which was replaced during the cleaning process:
+    report_content += """
+        ### 2.3 Missing Values Summary
+        The following columns had missing data, which was replaced during the cleaning process:
 
-"""
+        """
     for column, count in missing_summary.items():
         report_content += f"- **{column}**: {count} missing values replaced.\n"
 
     report_content += """
-## 3. Visualizations
-Here are some key visualizations for data analysis:
+        ## 3. Visualizations
+        Here are some key visualizations for data analysis:
 
-### 3.1 Distribution of Scores
-![Distribution of Scores](output_images/score_distribution.png)
+        ### 3.1 Distribution of Scores
+        ![Distribution of Scores](output_images/score_distribution.png)
 
-### 3.2 Correlation Matrix
-![Correlation Matrix](output_images/correlation_matrix.png)
+        ### 3.2 Correlation Matrix
+        ![Correlation Matrix](output_images/correlation_matrix.png)
 
-"""
+        """
     # Add distribution charts for categorical variables
     for column in df.select_dtypes(include=['object']).columns:
         report_content += f"### 3.3 Distribution of '{column}'\n"
